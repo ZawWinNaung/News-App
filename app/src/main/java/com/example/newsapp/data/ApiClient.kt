@@ -3,11 +3,9 @@ package com.example.newsapp.data
 import com.example.newsapp.model.TopHeadlinesResponseModel
 import retrofit2.Response
 import java.lang.Exception
+import javax.inject.Inject
 
-class ApiClient {
-    private val retrofitService: RetrofitService by lazy {
-        NetworkLayer.retrofit.create(RetrofitService::class.java)
-    }
+class ApiClient @Inject constructor(private val retrofitService: RetrofitService) {
 
     suspend fun getTopHeadlines(
         apiKey: String,

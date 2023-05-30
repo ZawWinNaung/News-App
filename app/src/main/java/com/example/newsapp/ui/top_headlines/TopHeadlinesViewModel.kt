@@ -5,10 +5,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.newsapp.data.SharedRepository
 import com.example.newsapp.utilities.Constants.Companion.API_KEY
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class TopHeadlinesViewModel : ViewModel() {
-    private val repository = SharedRepository()
+@HiltViewModel
+class TopHeadlinesViewModel @Inject constructor(private val repository: SharedRepository) :
+    ViewModel() {
+
 
     fun getTopHeadlines() {
         viewModelScope.launch {

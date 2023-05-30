@@ -7,7 +7,9 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import com.example.newsapp.base.BaseFragment
 import com.example.newsapp.databinding.FragmentTopHeadlinesBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class TopHeadlinesFragment : BaseFragment() {
     private lateinit var binding: FragmentTopHeadlinesBinding
     private val viewModel: TopHeadlinesViewModel by lazy {
