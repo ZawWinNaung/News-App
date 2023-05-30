@@ -12,4 +12,6 @@ object NetworkLayer {
         .baseUrl(BASE_URL)
         .addConverterFactory(MoshiConverterFactory.create(moshi))
         .build()
+
+    val apiClient = ApiClient()
 }
