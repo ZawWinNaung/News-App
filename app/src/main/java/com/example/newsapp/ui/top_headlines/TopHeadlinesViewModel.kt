@@ -14,9 +14,9 @@ class TopHeadlinesViewModel @Inject constructor(private val repository: SharedRe
     ViewModel() {
 
 
-    fun getTopHeadlines() {
+    fun getTopHeadlines(category: String) {
         viewModelScope.launch {
-            val response = repository.getTopHeadlines(API_KEY, "us")
+            val response = repository.getTopHeadlines(API_KEY, "us", category)
             Log.d("news response --->", response.toString())
         }
     }
