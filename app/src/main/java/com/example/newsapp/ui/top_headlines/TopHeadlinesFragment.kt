@@ -31,6 +31,9 @@ class TopHeadlinesFragment : BaseFragment() {
         savedInstanceState: Bundle?
     ): View {
         viewModel.getTopHeadlines()
+        binding.apply {
+
+        }
         return binding.root
     }
 }
