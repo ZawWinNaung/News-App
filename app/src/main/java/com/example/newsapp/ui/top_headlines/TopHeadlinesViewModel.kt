@@ -1,12 +1,12 @@
 package com.example.newsapp.ui.top_headlines
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.newsapp.data.ApiResponse
 import com.example.newsapp.data.SharedRepository
+import com.example.newsapp.db.DatabaseRepository
+import com.example.newsapp.model.Article
 import com.example.newsapp.model.TopHeadlinesResponseModel
 import com.example.newsapp.utilities.Constants.Companion.API_KEY
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,7 +14,9 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class TopHeadlinesViewModel @Inject constructor(private val repository: SharedRepository) :
+class TopHeadlinesViewModel @Inject constructor(
+    private val repository: SharedRepository
+) :
     ViewModel() {
     private val _topHeadlinesResponse = MutableLiveData<TopHeadlinesResponseModel>()
     val topHeadlinesResponseModel: LiveData<TopHeadlinesResponseModel>
@@ -31,5 +33,9 @@ class TopHeadlinesViewModel @Inject constructor(private val repository: SharedRe
             }
 
         }
+    }
+
+    fun saveArticle(article: Article) = viewModelScope.launch {
+
     }
 }
