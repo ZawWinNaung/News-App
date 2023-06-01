@@ -5,8 +5,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.newsapp.base.BaseFragment
 import com.example.newsapp.databinding.FragmentTopHeadlinesBinding
+import com.example.newsapp.model.TopHeadlinesResponseModel
+import com.example.newsapp.utilities.observe
+import com.google.android.material.tabs.TabLayout
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -16,8 +20,23 @@ class TopHeadlinesFragment : BaseFragment() {
         ViewModelProvider(this)[TopHeadlinesViewModel::class.java]
     }
 
-    override fun observeViewModel() {
+    private lateinit var topHeadlinesRecyclerAdapter: TopHeadlinesRecyclerAdapter
 
+    private val tabList = arrayListOf(
+        "U.S",
+        "Business",
+        "Entertainment",
+        "General",
+        "Health",
+        "Science",
+        "Sports",
+        "Technology"
+    )
+
+    override fun observeViewModel() {
+        viewModel.apply {
+            observe(topHeadlinesResponseModel, ::observeTopHeadlines)
+        }
     }
 
     override fun initViewBinding() {
@@ -30,7 +49,43 @@ class TopHeadlinesFragment : BaseFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        viewModel.getTopHeadlines()
+        viewModel.getTopHeadlines("")
+        topHeadlinesRecyclerAdapter = TopHeadlinesRecyclerAdapter()
+        binding.apply {
+            tabList.forEach {
+                tabLayout.addTab(tabLayout.newTab().setText(it))
+            }
+            tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+                override fun onTabSelected(tab: TabLayout.Tab?) {
+                    tab?.let {
+                        when (tab.position) {
+                            0 -> viewModel.getTopHeadlines("")
+                            else -> viewModel.getTopHeadlines(tabList[tab.position].lowercase())
+                        }
+                    }
+                }
+
+                override fun onTabUnselected(tab: TabLayout.Tab?) {
+
+                }
+
+                override fun onTabReselected(tab: TabLayout.Tab?) {
+
+                }
+            })
+            rvTopHeadlines.apply {
+                layoutManager = LinearLayoutManager(requireContext())
+                adapter = topHeadlinesRecyclerAdapter
+            }
+        }
         return binding.root
+    }
+
+    private fun observeTopHeadlines(response: TopHeadlinesResponseModel?) {
+        response?.let {
+            topHeadlinesRecyclerAdapter.submitList(it.articles)
+        } ?: run {
+            // show error
+        }
     }
 }

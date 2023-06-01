@@ -10,6 +10,7 @@ interface RetrofitService {
     @GET("top-headlines")
     suspend fun getTopHeadlines(
         @Query("apiKey") apiKey: String,
-        @Query("country") country: String
+        @Query("country") country: String,
+        @Query("category") category: String,
     ): Response<TopHeadlinesResponseModel>
 }
