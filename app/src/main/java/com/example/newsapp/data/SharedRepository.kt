@@ -7,12 +7,9 @@ class SharedRepository @Inject constructor(private val apiClient: ApiClient) {
     suspend fun getTopHeadlines(
         apiKey: String,
         country: String,
-        category: String
-    ): TopHeadlinesResponseModel? {
-        val request = apiClient.getTopHeadlines(apiKey, country, category)
-        if (request.failed || !request.isSuccessful) {
-            return null
-        }
-        return request.body
+        category: String,
+        page: Int
+    ): ApiResponse<TopHeadlinesResponseModel> {
+        return apiClient.getTopHeadlines(apiKey, country, category, page)
     }
 }
