@@ -11,9 +11,8 @@ class ApiClient @Inject constructor(private val retrofitService: RetrofitService
         apiKey: String,
         country: String,
         category: String,
-        page: Int
     ): ApiResponse<TopHeadlinesResponseModel> {
-        return safeApiCall { retrofitService.getTopHeadlines(apiKey, country, category, page) }
+        return safeApiCall { retrofitService.getTopHeadlines(apiKey, country, category) }
     }
 
     private inline fun <T> safeApiCall(apiCall: () -> Response<T>): ApiResponse<T> {

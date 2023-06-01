@@ -12,6 +12,5 @@ interface RetrofitService {
         @Query("apiKey") apiKey: String,
         @Query("country") country: String,
         @Query("category") category: String,
-        @Query("page") page: Int
     ): Response<TopHeadlinesResponseModel>
 }

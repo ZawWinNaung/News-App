@@ -8,8 +8,7 @@ class SharedRepository @Inject constructor(private val apiClient: ApiClient) {
         apiKey: String,
         country: String,
         category: String,
-        page: Int
     ): ApiResponse<TopHeadlinesResponseModel> {
-        return apiClient.getTopHeadlines(apiKey, country, category, page)
+        return apiClient.getTopHeadlines(apiKey, country, category)
     }
 }

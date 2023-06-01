@@ -16,27 +16,17 @@ import javax.inject.Inject
 @HiltViewModel
 class TopHeadlinesViewModel @Inject constructor(private val repository: SharedRepository) :
     ViewModel() {
-    private var page = 1
-    private var newsResponse: TopHeadlinesResponseModel? = null
     private val _topHeadlinesResponse = MutableLiveData<TopHeadlinesResponseModel>()
-
     val topHeadlinesResponseModel: LiveData<TopHeadlinesResponseModel>
         get() = _topHeadlinesResponse
 
     fun getTopHeadlines(category: String) {
         viewModelScope.launch {
-            val response = repository.getTopHeadlines(API_KEY, "us", category, page)
+            val response = repository.getTopHeadlines(API_KEY, "us", category)
             if (response.isSuccessful) {
                 response.body.let {
-                    page++
-                    if (newsResponse == null) {
-                        newsResponse = it
-                    } else {
-                        val oldArticles = newsResponse?.articles
-                        val newArticles = it.articles
-                        oldArticles?.addAll(newArticles)
-                    }
-                    _topHeadlinesResponse.postValue(newsResponse ?: it)
+
+                    _topHeadlinesResponse.postValue(it)
                 }
             }
 
