@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.newsapp.data.SharedRepository
-import com.example.newsapp.db.DatabaseRepository
+import com.example.newsapp.db.RoomRepository
 import com.example.newsapp.model.Article
 import com.example.newsapp.model.TopHeadlinesResponseModel
 import com.example.newsapp.utilities.Constants.Companion.API_KEY
@@ -15,7 +15,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TopHeadlinesViewModel @Inject constructor(
-    private val repository: SharedRepository
+    private val repository: SharedRepository,
+    private val roomRepository: RoomRepository
 ) :
     ViewModel() {
     private val _topHeadlinesResponse = MutableLiveData<TopHeadlinesResponseModel>()
@@ -35,7 +36,13 @@ class TopHeadlinesViewModel @Inject constructor(
         }
     }
 
-    fun saveArticle(article: Article) = viewModelScope.launch {
+    fun getSavedArticles() = roomRepository.getAllArticles()
 
+    fun saveArticle(article: Article) = viewModelScope.launch {
+        roomRepository.upsert(article)
+    }
+
+    fun unsaveArticle(article: Article) = viewModelScope.launch {
+        roomRepository.deleteArticle(article)
     }
 }

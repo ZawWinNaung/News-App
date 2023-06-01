@@ -1,6 +1,7 @@
 package com.example.newsapp.ui.top_headlines
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -50,7 +51,15 @@ class TopHeadlinesFragment : BaseFragment() {
         savedInstanceState: Bundle?
     ): View {
         viewModel.getTopHeadlines("")
-        topHeadlinesRecyclerAdapter = TopHeadlinesRecyclerAdapter()
+        topHeadlinesRecyclerAdapter = TopHeadlinesRecyclerAdapter() { data, isChecked ->
+            if (isChecked) {
+                Log.d("##db_save_article-->", data.toString())
+                viewModel.saveArticle(data)
+            } else {
+                Log.d("##db_delete_article-->", data.toString())
+                viewModel.unsaveArticle(data)
+            }
+        }
         binding.apply {
             tabList.forEach {
                 tabLayout.addTab(tabLayout.newTab().setText(it))
@@ -76,6 +85,9 @@ class TopHeadlinesFragment : BaseFragment() {
             rvTopHeadlines.apply {
                 layoutManager = LinearLayoutManager(requireContext())
                 adapter = topHeadlinesRecyclerAdapter
+            }
+            viewModel.getSavedArticles().observe(viewLifecycleOwner) {
+                topHeadlinesRecyclerAdapter.getSavedArticles(it)
             }
         }
         return binding.root
