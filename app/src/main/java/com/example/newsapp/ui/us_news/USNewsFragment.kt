@@ -60,7 +60,7 @@ class USNewsFragment : BaseFragment() {
 
     private fun observeTopHeadlines(response: TopHeadlinesResponseModel?) {
         response?.let {
-            topHeadlinesRecyclerAdapter.submitList(it.articles)
+            topHeadlinesRecyclerAdapter.submitNewsList(it.articles)
         } ?: run {
             // show error
         }

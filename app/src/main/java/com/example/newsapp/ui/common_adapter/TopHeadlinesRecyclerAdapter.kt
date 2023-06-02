@@ -10,11 +10,17 @@ import com.example.newsapp.model.Article
 import com.example.newsapp.utilities.setGlide
 
 class TopHeadlinesRecyclerAdapter(private val itemClickCallback: ((Article, Boolean) -> Unit)?) :
-    ListAdapter<Article, TopHeadlinesRecyclerAdapter.ViewHolder>(ArticleDiffCallBack()) {
-    private var savedArticleList: MutableList<Article> = arrayListOf()
-    fun getSavedArticles(articleList: List<Article>) {
-        savedArticleList.addAll(articleList)
+    RecyclerView.Adapter<TopHeadlinesRecyclerAdapter.ViewHolder>() {
+    private var newsList: List<Article> = emptyList()
+    private var savedArticleList: List<Article> = emptyList()
+
+    fun submitNewsList(newsList: List<Article>) {
+        this.newsList = newsList
         notifyDataSetChanged()
+    }
+
+    fun getSavedArticles(articleList: List<Article>) {
+        savedArticleList = articleList
     }
 
     class ViewHolder(
@@ -33,14 +39,6 @@ class TopHeadlinesRecyclerAdapter(private val itemClickCallback: ((Article, Bool
         }
     }
 
-    private class ArticleDiffCallBack : DiffUtil.ItemCallback<Article>() {
-        override fun areItemsTheSame(oldItem: Article, newItem: Article): Boolean =
-            oldItem == newItem
-
-        override fun areContentsTheSame(oldItem: Article, newItem: Article): Boolean =
-            oldItem == newItem
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
             LayoutTopHeadlinesItemBinding.inflate(
@@ -51,14 +49,20 @@ class TopHeadlinesRecyclerAdapter(private val itemClickCallback: ((Article, Bool
         )
     }
 
+    override fun getItemCount() = newsList.size
+
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = getItem(position)
+        val item = newsList[position]
         holder.bindData(item)
         val result = savedArticleList.filter { article -> article.title == item.title }
-        holder.cbFavorite.isChecked = result.isNotEmpty()
-        holder.cbFavorite.setOnCheckedChangeListener { _, isChecked ->
-            holder.cbFavorite.isChecked = isChecked
-            itemClickCallback?.invoke(item, isChecked)
+        val cbFavorite = holder.cbFavorite
+        cbFavorite.isChecked = result.isNotEmpty()
+        cbFavorite.setOnClickListener {
+            itemClickCallback?.invoke(item, cbFavorite.isChecked)
         }
+//        holder.cbFavorite.setOnCheckedChangeListener { _, isChecked ->
+//            holder.cbFavorite.isChecked = isChecked
+//            itemClickCallback?.invoke(item, isChecked)
+//        }
     }
 }

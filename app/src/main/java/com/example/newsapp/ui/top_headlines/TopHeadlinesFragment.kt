@@ -19,7 +19,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class TopHeadlinesFragment : BaseFragment() {
     private lateinit var binding: FragmentTopHeadlinesBinding
-
+    private lateinit var adapter: ViewPagerAdapter
     private val tabList = arrayListOf(
         "U.S",
         "Business",
@@ -44,13 +44,18 @@ class TopHeadlinesFragment : BaseFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding.apply {
-            val adapter = ViewPagerAdapter(parentFragmentManager, lifecycle)
-            viewPager.adapter = adapter
-            TabLayoutMediator(tabLayout, viewPager) { tab, position ->
-                tab.text = tabList[position]
-            }.attach()
-        }
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val viewPager = binding.viewPager
+        val tabLayout = binding.tabLayout
+        adapter = ViewPagerAdapter(this)
+        viewPager.adapter = adapter
+        viewPager.offscreenPageLimit = 1
+        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
+            tab.text = tabList[position]
+        }.attach()
     }
 }

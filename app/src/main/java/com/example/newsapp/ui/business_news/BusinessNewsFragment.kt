@@ -11,7 +11,9 @@ import com.example.newsapp.databinding.FragmentNewsBinding
 import com.example.newsapp.model.TopHeadlinesResponseModel
 import com.example.newsapp.ui.common_adapter.TopHeadlinesRecyclerAdapter
 import com.example.newsapp.utilities.observe
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class BusinessNewsFragment : BaseFragment() {
     private lateinit var binding: FragmentNewsBinding
     private val viewModel: BusinessNewsViewModel by lazy {
@@ -57,7 +59,7 @@ class BusinessNewsFragment : BaseFragment() {
 
     private fun observeTopHeadlines(response: TopHeadlinesResponseModel?) {
         response?.let {
-            topHeadlinesRecyclerAdapter.submitList(it.articles)
+            topHeadlinesRecyclerAdapter.submitNewsList(it.articles)
         } ?: run {
             // show error
         }
