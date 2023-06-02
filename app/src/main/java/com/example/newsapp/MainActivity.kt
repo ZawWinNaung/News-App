@@ -1,11 +1,20 @@
 package com.example.newsapp
 
 import android.os.Bundle
+import android.view.Gravity
 import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.setupWithNavController
+import androidx.transition.Slide
+import androidx.transition.TransitionManager
 import com.example.newsapp.databinding.ActivityMainBinding
+import com.example.newsapp.ui.news_detail.NewsDetailFragment
 import com.example.newsapp.ui.saved_news.SavedNewsFragment
 import com.example.newsapp.ui.top_headlines.TopHeadlinesFragment
 import com.google.android.material.navigation.NavigationBarView
@@ -18,38 +27,20 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
+        binding.lifecycleOwner = this
         setContentView(binding.root)
 
-        //using navigation component and bottom navigation is recreating the fragments
-        //which is not good
-        //I can't find the solution cuz google haven't fixed for that, yet
-        //so, have to use the old way
+        binding.apply {
+            val navController = fragmentContainerView.getFragment<NavHostFragment>().navController
+            binding.bottomNavigationView.setupWithNavController(navController)
 
-        val fragment1 = TopHeadlinesFragment()
-        val fragment2 = SavedNewsFragment()
-        val fm = supportFragmentManager
-        var active: Fragment = fragment1
-        fm.beginTransaction().add(R.id.main_container, fragment2, "2").hide(fragment2).commit()
-        fm.beginTransaction().add(R.id.main_container, fragment1, "1").commit()
-
-        binding.bottomNavigationView.setOnItemSelectedListener(object :
-            NavigationBarView.OnItemSelectedListener {
-            override fun onNavigationItemSelected(item: MenuItem): Boolean {
-                when (item.itemId) {
-                    R.id.topHeadlinesFragment -> {
-                        fm.beginTransaction().hide(active).show(fragment1).commit()
-                        active = fragment1
-                        return true
-                    }
-
-                    R.id.savedNewsFragment -> {
-                        fm.beginTransaction().hide(active).show(fragment2).commit();
-                        active = fragment2;
-                        return true;
-                    }
+            navController.addOnDestinationChangedListener { _, destination, _ ->
+                if (destination.id == R.id.newsDetailFragment) {
+                    bottomNavigationView.visibility = View.GONE
+                } else {
+                    bottomNavigationView.visibility = View.VISIBLE
                 }
-                return false
             }
-        })
+        }
     }
 }

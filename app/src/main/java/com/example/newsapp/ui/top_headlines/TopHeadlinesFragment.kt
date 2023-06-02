@@ -1,15 +1,20 @@
 package com.example.newsapp.ui.top_headlines
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.newsapp.R
 import com.example.newsapp.base.BaseFragment
 import com.example.newsapp.databinding.FragmentTopHeadlinesBinding
+import com.example.newsapp.model.Article
 import com.example.newsapp.model.TopHeadlinesResponseModel
 import com.example.newsapp.ui.common_adapter.TopHeadlinesRecyclerAdapter
+import com.example.newsapp.ui.news_detail.NewsDetailFragment
 import com.example.newsapp.utilities.observe
 import com.google.android.material.tabs.TabLayout
 import dagger.hilt.android.AndroidEntryPoint
@@ -55,6 +60,7 @@ class TopHeadlinesFragment : BaseFragment() {
 
     override fun onResume() {
         super.onResume()
+        viewModel.getSavedArticles()
         when (val position = binding.tabLayout.selectedTabPosition) {
             0 -> viewModel.getTopHeadlines("")
             else -> viewModel.getTopHeadlines(tabList[position].lowercase())
@@ -71,16 +77,12 @@ class TopHeadlinesFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.getTopHeadlines("")
-        topHeadlinesRecyclerAdapter = TopHeadlinesRecyclerAdapter() { data, isChecked ->
-            if (isChecked) {
-                viewModel.saveArticle(data)
-            } else {
-                viewModel.unsaveArticle(data)
-            }
-        }
+//        viewModel.getTopHeadlines("")
+        topHeadlinesRecyclerAdapter = TopHeadlinesRecyclerAdapter(
+            checkBoxClickCallback = ::checkBoxClick,
+            itemClickCallback = ::itemClick
+        )
         binding.apply {
-            tabList.forEach { tabLayout.addTab(tabLayout.newTab().setText(it)) }
             tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
                 override fun onTabSelected(tab: TabLayout.Tab?) {
                     tab?.let {
@@ -106,6 +108,24 @@ class TopHeadlinesFragment : BaseFragment() {
             viewModel.getSavedArticles().observe(viewLifecycleOwner) {
                 topHeadlinesRecyclerAdapter.getSavedArticles(it)
             }
+            topHeadlinesRecyclerAdapter
         }
+    }
+
+    private fun checkBoxClick(data: Article, isChecked: Boolean) {
+        if (isChecked) {
+            viewModel.saveArticle(data)
+        } else {
+            viewModel.unsaveArticle(data)
+        }
+    }
+
+    private fun itemClick(data: Article) {
+        val bundle = Bundle().apply {
+            putSerializable("article", data)
+        }
+        findNavController().navigate(
+            R.id.action_topHeadlinesFragment_to_newsDetailFragment, bundle
+        )
     }
 }
