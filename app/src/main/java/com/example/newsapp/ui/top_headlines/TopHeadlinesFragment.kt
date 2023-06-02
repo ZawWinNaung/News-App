@@ -13,32 +13,25 @@ import com.example.newsapp.model.TopHeadlinesResponseModel
 import com.example.newsapp.ui.common_adapter.TopHeadlinesRecyclerAdapter
 import com.example.newsapp.utilities.observe
 import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class TopHeadlinesFragment : BaseFragment() {
     private lateinit var binding: FragmentTopHeadlinesBinding
-    private val viewModel: TopHeadlinesViewModel by lazy {
-        ViewModelProvider(this)[TopHeadlinesViewModel::class.java]
-    }
-
-    private lateinit var topHeadlinesRecyclerAdapter: TopHeadlinesRecyclerAdapter
 
     private val tabList = arrayListOf(
         "U.S",
         "Business",
-        "Entertainment",
-        "General",
-        "Health",
-        "Science",
-        "Sports",
-        "Technology"
+//        "Entertainment",
+//        "General",
+//        "Health",
+//        "Science",
+//        "Sports",
+//        "Technology"
     )
 
     override fun observeViewModel() {
-        viewModel.apply {
-            observe(topHeadlinesResponseModel, ::observeTopHeadlines)
-        }
     }
 
     override fun initViewBinding() {
@@ -51,60 +44,13 @@ class TopHeadlinesFragment : BaseFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        viewModel.getTopHeadlines("")
-        topHeadlinesRecyclerAdapter = TopHeadlinesRecyclerAdapter() { data, isChecked ->
-            Log.d("##check->", isChecked.toString())
-            if (isChecked) {
-                viewModel.saveArticle(data)
-            } else {
-                viewModel.unsaveArticle(data)
-            }
-        }
         binding.apply {
-            tabList.forEach {
-                tabLayout.addTab(tabLayout.newTab().setText(it))
-            }
-            tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-                override fun onTabSelected(tab: TabLayout.Tab?) {
-                    tab?.let {
-                        when (tab.position) {
-                            0 -> viewModel.getTopHeadlines("")
-                            else -> viewModel.getTopHeadlines(tabList[tab.position].lowercase())
-                        }
-                    }
-                }
-
-                override fun onTabUnselected(tab: TabLayout.Tab?) {
-
-                }
-
-                override fun onTabReselected(tab: TabLayout.Tab?) {
-
-                }
-            })
-            rvTopHeadlines.apply {
-                layoutManager = LinearLayoutManager(requireContext())
-                adapter = topHeadlinesRecyclerAdapter
-            }
-            viewModel.getSavedArticles().observe(viewLifecycleOwner) {
-                topHeadlinesRecyclerAdapter.getSavedArticles(it)
-            }
+            val adapter = ViewPagerAdapter(parentFragmentManager, lifecycle)
+            viewPager.adapter = adapter
+            TabLayoutMediator(tabLayout, viewPager) { tab, position ->
+                tab.text = tabList[position]
+            }.attach()
         }
         return binding.root
-    }
-
-    private fun observeTopHeadlines(response: TopHeadlinesResponseModel?) {
-        response?.let {
-            topHeadlinesRecyclerAdapter.submitList(it.articles)
-        } ?: run {
-            // show error
-        }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        viewModel.getSavedArticles().observe(viewLifecycleOwner) {
-            topHeadlinesRecyclerAdapter.getSavedArticles(it)
-        }
     }
 }

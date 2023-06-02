@@ -1,4 +1,4 @@
-package com.example.newsapp.ui.top_headlines
+package com.example.newsapp.ui.us_news
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -8,27 +8,25 @@ import com.example.newsapp.data.SharedRepository
 import com.example.newsapp.db.RoomRepository
 import com.example.newsapp.model.Article
 import com.example.newsapp.model.TopHeadlinesResponseModel
-import com.example.newsapp.utilities.Constants.Companion.API_KEY
+import com.example.newsapp.utilities.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class TopHeadlinesViewModel @Inject constructor(
+class USNewsViewModel @Inject constructor(
     private val repository: SharedRepository,
     private val roomRepository: RoomRepository
-) :
-    ViewModel() {
-    val _topHeadlinesResponse = MutableLiveData<TopHeadlinesResponseModel>()
+) : ViewModel() {
+    private val _topHeadlinesResponse = MutableLiveData<TopHeadlinesResponseModel>()
     val topHeadlinesResponseModel: LiveData<TopHeadlinesResponseModel>
         get() = _topHeadlinesResponse
 
-    fun getTopHeadlines(category: String) {
+    fun getTopHeadlines() {
         viewModelScope.launch {
-            val response = repository.getTopHeadlines(API_KEY, "us", category)
+            val response = repository.getTopHeadlines(Constants.API_KEY, "us", "")
             if (response.isSuccessful) {
                 response.body.let {
-
                     _topHeadlinesResponse.postValue(it)
                 }
             }
