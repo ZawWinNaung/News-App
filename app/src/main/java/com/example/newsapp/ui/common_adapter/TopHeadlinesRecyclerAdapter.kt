@@ -2,14 +2,15 @@ package com.example.newsapp.ui.common_adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.newsapp.databinding.LayoutTopHeadlinesItemBinding
 import com.example.newsapp.model.Article
 import com.example.newsapp.utilities.setGlide
 
-class TopHeadlinesRecyclerAdapter(private val itemClickCallback: ((Article, Boolean) -> Unit)?) :
+class TopHeadlinesRecyclerAdapter(
+    private val checkBoxClickCallback: ((Article, Boolean) -> Unit)?,
+    private val itemClickCallback: ((Article) -> Unit)?
+) :
     RecyclerView.Adapter<TopHeadlinesRecyclerAdapter.ViewHolder>() {
     private var newsList: List<Article> = emptyList()
     private var savedArticleList: List<Article> = emptyList()
@@ -21,6 +22,7 @@ class TopHeadlinesRecyclerAdapter(private val itemClickCallback: ((Article, Bool
 
     fun getSavedArticles(articleList: List<Article>) {
         savedArticleList = articleList
+        notifyDataSetChanged()
     }
 
     class ViewHolder(
@@ -58,11 +60,10 @@ class TopHeadlinesRecyclerAdapter(private val itemClickCallback: ((Article, Bool
         val cbFavorite = holder.cbFavorite
         cbFavorite.isChecked = result.isNotEmpty()
         cbFavorite.setOnClickListener {
-            itemClickCallback?.invoke(item, cbFavorite.isChecked)
+            checkBoxClickCallback?.invoke(item, cbFavorite.isChecked)
         }
-//        holder.cbFavorite.setOnCheckedChangeListener { _, isChecked ->
-//            holder.cbFavorite.isChecked = isChecked
-//            itemClickCallback?.invoke(item, isChecked)
-//        }
+        holder.itemView.setOnClickListener {
+            itemClickCallback?.invoke(item)
+        }
     }
 }

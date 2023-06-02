@@ -9,10 +9,27 @@
         android:id="@+id/topHeadlinesFragment"
         android:name="com.example.newsapp.ui.top_headlines.TopHeadlinesFragment"
         android:label="TopHeadlinesFragment"
-        tools:layout="@layout/fragment_top_headlines" />
+        tools:layout="@layout/fragment_top_headlines">
+        <action
+            android:id="@+id/action_topHeadlinesFragment_to_newsDetailFragment"
+            app:destination="@id/newsDetailFragment" />
+    </fragment>
     <fragment
         android:id="@+id/savedNewsFragment"
         android:name="com.example.newsapp.ui.saved_news.SavedNewsFragment"
         android:label="SavedNewsFragment"
-        tools:layout="@layout/fragment_saved_news" />
+        tools:layout="@layout/fragment_saved_news">
+        <action
+            android:id="@+id/action_savedNewsFragment_to_newsDetailFragment"
+            app:destination="@id/newsDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/newsDetailFragment"
+        android:name="com.example.newsapp.ui.news_detail.NewsDetailFragment"
+        android:label="NewsDetailFragment"
+        tools:layout="@layout/fragment_news_detail" >
+        <argument
+            android:name="article"
+            app:argType="com.example.newsapp.model.Article" />
+    </fragment>
 </navigation>
