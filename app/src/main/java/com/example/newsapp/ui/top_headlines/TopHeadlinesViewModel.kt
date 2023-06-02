@@ -1,4 +1,4 @@
-package com.example.newsapp.ui.us_news
+package com.example.newsapp.ui.top_headlines
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class USNewsViewModel @Inject constructor(
+class TopHeadlinesViewModel @Inject constructor(
     private val repository: SharedRepository,
     private val roomRepository: RoomRepository
 ) : ViewModel() {
@@ -22,9 +22,9 @@ class USNewsViewModel @Inject constructor(
     val topHeadlinesResponseModel: LiveData<TopHeadlinesResponseModel>
         get() = _topHeadlinesResponse
 
-    fun getTopHeadlines() {
+    fun getTopHeadlines(category: String) {
         viewModelScope.launch {
-            val response = repository.getTopHeadlines(Constants.API_KEY, "us", "")
+            val response = repository.getTopHeadlines(Constants.API_KEY, "us", category)
             if (response.isSuccessful) {
                 response.body.let {
                     _topHeadlinesResponse.postValue(it)

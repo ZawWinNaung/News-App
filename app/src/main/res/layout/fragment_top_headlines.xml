@@ -13,13 +13,21 @@
             app:layout_constraintTop_toTopOf="parent"
             app:tabMode="scrollable" />
 
-        <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/view_pager"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_news"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:saveEnabled="false"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tab_layout" />
+            app:layout_constraintTop_toBottomOf="@id/tab_layout"
+            tools:listitem="@layout/layout_top_headlines_item" />
+
+        <!--        <androidx.viewpager2.widget.ViewPager2-->
+        <!--            android:id="@+id/view_pager"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="0dp"-->
+        <!--            android:saveEnabled="false"-->
+        <!--            app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--            app:layout_constraintTop_toBottomOf="@id/tab_layout" />-->
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
