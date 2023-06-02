@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.newsapp.base.BaseFragment
 import com.example.newsapp.databinding.FragmentTopHeadlinesBinding
 import com.example.newsapp.model.TopHeadlinesResponseModel
+import com.example.newsapp.ui.common_adapter.TopHeadlinesRecyclerAdapter
 import com.example.newsapp.utilities.observe
 import com.google.android.material.tabs.TabLayout
 import dagger.hilt.android.AndroidEntryPoint
@@ -52,11 +53,10 @@ class TopHeadlinesFragment : BaseFragment() {
     ): View {
         viewModel.getTopHeadlines("")
         topHeadlinesRecyclerAdapter = TopHeadlinesRecyclerAdapter() { data, isChecked ->
+            Log.d("##check->", isChecked.toString())
             if (isChecked) {
-                Log.d("##db_save_article-->", data.toString())
                 viewModel.saveArticle(data)
             } else {
-                Log.d("##db_delete_article-->", data.toString())
                 viewModel.unsaveArticle(data)
             }
         }
@@ -98,6 +98,13 @@ class TopHeadlinesFragment : BaseFragment() {
             topHeadlinesRecyclerAdapter.submitList(it.articles)
         } ?: run {
             // show error
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.getSavedArticles().observe(viewLifecycleOwner) {
+            topHeadlinesRecyclerAdapter.getSavedArticles(it)
         }
     }
 }

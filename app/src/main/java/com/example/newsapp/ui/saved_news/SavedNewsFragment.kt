@@ -4,12 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.newsapp.base.BaseFragment
 import com.example.newsapp.databinding.FragmentSavedNewsBinding
-import com.example.newsapp.ui.top_headlines.TopHeadlinesRecyclerAdapter
+import com.example.newsapp.ui.common_adapter.TopHeadlinesRecyclerAdapter
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

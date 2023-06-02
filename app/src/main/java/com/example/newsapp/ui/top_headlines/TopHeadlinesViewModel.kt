@@ -19,7 +19,7 @@ class TopHeadlinesViewModel @Inject constructor(
     private val roomRepository: RoomRepository
 ) :
     ViewModel() {
-    private val _topHeadlinesResponse = MutableLiveData<TopHeadlinesResponseModel>()
+    val _topHeadlinesResponse = MutableLiveData<TopHeadlinesResponseModel>()
     val topHeadlinesResponseModel: LiveData<TopHeadlinesResponseModel>
         get() = _topHeadlinesResponse
 
