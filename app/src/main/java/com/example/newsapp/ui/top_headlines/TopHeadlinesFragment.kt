@@ -1,6 +1,7 @@
 package com.example.newsapp.ui.top_headlines
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.newsapp.base.BaseFragment
 import com.example.newsapp.databinding.FragmentTopHeadlinesBinding
 import com.example.newsapp.model.TopHeadlinesResponseModel
+import com.example.newsapp.ui.common_adapter.TopHeadlinesRecyclerAdapter
 import com.example.newsapp.utilities.observe
 import com.google.android.material.tabs.TabLayout
 import dagger.hilt.android.AndroidEntryPoint
@@ -50,7 +52,14 @@ class TopHeadlinesFragment : BaseFragment() {
         savedInstanceState: Bundle?
     ): View {
         viewModel.getTopHeadlines("")
-        topHeadlinesRecyclerAdapter = TopHeadlinesRecyclerAdapter()
+        topHeadlinesRecyclerAdapter = TopHeadlinesRecyclerAdapter() { data, isChecked ->
+            Log.d("##check->", isChecked.toString())
+            if (isChecked) {
+                viewModel.saveArticle(data)
+            } else {
+                viewModel.unsaveArticle(data)
+            }
+        }
         binding.apply {
             tabList.forEach {
                 tabLayout.addTab(tabLayout.newTab().setText(it))
@@ -77,6 +86,9 @@ class TopHeadlinesFragment : BaseFragment() {
                 layoutManager = LinearLayoutManager(requireContext())
                 adapter = topHeadlinesRecyclerAdapter
             }
+            viewModel.getSavedArticles().observe(viewLifecycleOwner) {
+                topHeadlinesRecyclerAdapter.getSavedArticles(it)
+            }
         }
         return binding.root
     }
@@ -86,6 +98,13 @@ class TopHeadlinesFragment : BaseFragment() {
             topHeadlinesRecyclerAdapter.submitList(it.articles)
         } ?: run {
             // show error
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.getSavedArticles().observe(viewLifecycleOwner) {
+            topHeadlinesRecyclerAdapter.getSavedArticles(it)
         }
     }
 }
