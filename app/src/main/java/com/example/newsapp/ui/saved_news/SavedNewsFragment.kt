@@ -41,7 +41,7 @@ class SavedNewsFragment : BaseFragment() {
             layoutManager = LinearLayoutManager(requireContext())
         }
         viewModel.getSavedArticles().observe(viewLifecycleOwner) {
-            listAdapter.submitList(it)
+            listAdapter.submitNewsList(it)
             listAdapter.getSavedArticles(it)
         }
         return binding.root
