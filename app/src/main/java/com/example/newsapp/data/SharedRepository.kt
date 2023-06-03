@@ -13,8 +13,13 @@ class SharedRepository @Inject constructor(
         apiKey: String,
         country: String,
         category: String,
-        page: Int
     ): ApiResponse<TopHeadlinesResponseModel> {
-        return apiClient.getTopHeadlines(apiKey, country, category, page)
+        return apiClient.getTopHeadlines(apiKey, country, category)
     }
+
+//    suspend fun upsert(article: Article) = db.getArticleDao().upsert(article)
+//
+//    fun getSavedNews() = db.getArticleDao().getAllArticles()
+//
+//    suspend fun deleteArticle(article: Article) = db.getArticleDao().deleteArticle(article)
 }
