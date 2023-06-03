@@ -22,9 +22,9 @@ class TopHeadlinesViewModel @Inject constructor(
     val topHeadlinesResponseModel: LiveData<TopHeadlinesResponseModel>
         get() = _topHeadlinesResponse
 
-    fun getTopHeadlines(category: String) {
+    fun getTopHeadlines(category: String, page: Int) {
         viewModelScope.launch {
-            val response = repository.getTopHeadlines(Constants.API_KEY, "us", category)
+            val response = repository.getTopHeadlines(Constants.API_KEY, "us", category, page)
             if (response.isSuccessful) {
                 response.body.let {
                     _topHeadlinesResponse.postValue(it)
