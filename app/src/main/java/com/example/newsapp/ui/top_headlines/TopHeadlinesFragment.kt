@@ -54,17 +54,16 @@ class TopHeadlinesFragment : BaseFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
+        when (val position = binding.tabLayout.selectedTabPosition) {
+            0 -> viewModel.getTopHeadlines("")
+            else -> viewModel.getTopHeadlines(tabList[position].lowercase())
+        }
         return binding.root
     }
 
     override fun onResume() {
         super.onResume()
         viewModel.getSavedArticles()
-        when (val position = binding.tabLayout.selectedTabPosition) {
-            0 -> viewModel.getTopHeadlines("")
-            else -> viewModel.getTopHeadlines(tabList[position].lowercase())
-        }
     }
 
     private fun observeTopHeadlines(response: TopHeadlinesResponseModel?) {
@@ -86,8 +85,15 @@ class TopHeadlinesFragment : BaseFragment() {
                 override fun onTabSelected(tab: TabLayout.Tab?) {
                     tab?.let {
                         when (tab.position) {
-                            0 -> viewModel.getTopHeadlines("")
-                            else -> viewModel.getTopHeadlines(tabList[tab.position].lowercase())
+                            0 -> {
+                                topHeadlinesRecyclerAdapter.submitNewsList(emptyList())
+                                viewModel.getTopHeadlines("")
+                            }
+
+                            else -> {
+                                topHeadlinesRecyclerAdapter.submitNewsList(emptyList())
+                                viewModel.getTopHeadlines(tabList[tab.position].lowercase())
+                            }
                         }
                     }
                 }
