@@ -2,7 +2,7 @@ package com.example.newsapp.utilities
 
 class Constants {
     companion object {
-        const val API_KEY = "ee810d9d07064c24836b57df307c74fd"
+        const val API_KEY = "be7bb88d7dcf48f799dce1b66f11ddf9"
         const val BASE_URL = "https://newsapi.org/v2/"
     }
 }

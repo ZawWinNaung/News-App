@@ -41,9 +41,12 @@ class SavedNewsFragment : BaseFragment() {
             checkBoxClickCallback = ::checkBoxClick,
             itemClickCallback = ::itemClick
         )
-        binding.rvSavedArticles.apply {
-            adapter = listAdapter
-            layoutManager = LinearLayoutManager(requireContext())
+        binding.apply {
+            toolBar.title = "Saved News"
+            rvSavedArticles.apply {
+                adapter = listAdapter
+                layoutManager = LinearLayoutManager(requireContext())
+            }
         }
         viewModel.getSavedArticles().observe(viewLifecycleOwner) {
             listAdapter.submitNewsList(it)
