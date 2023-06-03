@@ -77,7 +77,6 @@ class TopHeadlinesFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-//        viewModel.getTopHeadlines("")
         topHeadlinesRecyclerAdapter = TopHeadlinesRecyclerAdapter(
             checkBoxClickCallback = ::checkBoxClick,
             itemClickCallback = ::itemClick
